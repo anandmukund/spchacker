@@ -26,10 +26,11 @@ import com.google.gson.Gson;
  * this class is integration test so need to application in started state
  * when you run this test for user signup please always change the name and email id 
  * otherwise it will show as duplicate 
- *
+ * please remove @Ignore to run this class
  * 
  */
 
+@Ignore
 public class UserControllerTest {
 
 	CloseableHttpClient client = null;
