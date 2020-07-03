@@ -7,7 +7,7 @@ import com.covid.spchacker.cache.copy.RandomAuth;
 import com.covid.spchacker.dto.RegisterUser;
 import com.covid.spchacker.dto.UserLoginResponse;
 import com.covid.spchacker.entity.User;
-import com.covid.spchacker.entity.UserRepository;
+import com.covid.spchacker.repository.UserRepository;
 
 @Service
 public class UserServices {

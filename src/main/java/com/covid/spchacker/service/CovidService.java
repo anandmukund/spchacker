@@ -12,9 +12,9 @@ import org.springframework.stereotype.Service;
 
 import com.covid.spchacker.cache.copy.ApplicationCache;
 import com.covid.spchacker.entity.Patients;
-import com.covid.spchacker.entity.PatientsRepository;
 import com.covid.spchacker.entity.User;
-import com.covid.spchacker.entity.UserRepository;
+import com.covid.spchacker.repository.PatientsRepository;
+import com.covid.spchacker.repository.UserRepository;
 
 @Service
 public class CovidService {
