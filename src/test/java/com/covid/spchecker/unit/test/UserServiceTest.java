@@ -54,6 +54,80 @@ public class UserServiceTest {
 		
 	}
 	
+	@Test(expected = Exception.class)
+	public void loginFailLogoutTest() throws Exception {
+		User fE = cretate();
+		Mockito.when(userRepository.getUserByUsername(fE.getUsername())).thenReturn(cretate());
+		 userService.loginUser(fE.getUsername(), "123456789ee");
+		
+		
+	}
+	
+	@Test(expected = Exception.class)
+	public void loginFailInValidUserLogoutTest() throws Exception {
+		User fE = cretate();
+		Mockito.when(userRepository.getUserByUsername(fE.getUsername())).thenReturn(cretate());
+		userService.loginUser(fE.getUsername()+"Test", "123456789");
+		
+		
+	}
+	
+	@Test(expected = Exception.class)
+	public void signUpUserFailTest() throws Exception {
+		RegisterUser fE = cretate1();
+		fE.setEmail(null);
+		Mockito.when(userRepository.save(cretate())).thenReturn(cretate());
+		userService.signUpUser(fE);
+	}
+	
+	@Test(expected = Exception.class)
+	public void signUpUserFail_1Test() throws Exception {
+		RegisterUser fE = cretate1();
+		fE.setUsername(null);
+		Mockito.when(userRepository.save(cretate())).thenReturn(cretate());
+		userService.signUpUser(fE);
+	}
+	
+	@Test(expected = Exception.class)
+	public void signUpUserFail_2Test() throws Exception {
+		RegisterUser fE = cretate1();
+		fE.setFirstname(null);
+		Mockito.when(userRepository.save(cretate())).thenReturn(cretate());
+		userService.signUpUser(fE);
+	}
+	@Test(expected = Exception.class)
+	public void signUpUserFail_3Test() throws Exception {
+		RegisterUser fE = cretate1();
+		fE.setPassword(null);
+		Mockito.when(userRepository.save(cretate())).thenReturn(cretate());
+		userService.signUpUser(fE);
+	}
+	@Test(expected = Exception.class)
+	public void signUpUserFail_4Test() throws Exception {
+		RegisterUser fE = cretate1();
+		fE.setPassword("12345");
+		Mockito.when(userRepository.save(cretate())).thenReturn(cretate());
+		userService.signUpUser(fE);
+	}
+	
+	@Test(expected = Exception.class)
+	public void signUpUserFail_5Test() throws Exception {
+		RegisterUser fE = cretate1();
+		Mockito.when(userRepository.save(cretate())).thenReturn(cretate());
+		Mockito.when(userRepository.getUserByEmail(fE.getEmail())).thenReturn(cretate());
+		userService.signUpUser(fE);
+		
+	}
+	
+	@Test(expected = Exception.class)
+	public void signUpUserFail_6Test() throws Exception {
+		RegisterUser fE = cretate1();
+		Mockito.when(userRepository.save(cretate())).thenReturn(cretate());
+		Mockito.when(userRepository.getUserByUsername(fE.getUsername())).thenReturn(cretate());
+		userService.signUpUser(fE);
+		
+	}
+	
 	
 	private RegisterUser cretate1() {
 		RegisterUser user = new RegisterUser();
