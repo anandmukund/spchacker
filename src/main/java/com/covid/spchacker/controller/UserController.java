@@ -22,7 +22,7 @@ public class UserController {
 	UserServices userServices;
 
 	@PostMapping("/signup")
-	public ResponseEntity<Boolean> signup(@RequestBody RegisterUser user ) throws Exception{
+	public ResponseEntity<Object> signup(@RequestBody RegisterUser user ) throws Exception{
 		Boolean result = null;
 		try {
 			result =  userServices.signUpUser(user);
@@ -30,11 +30,11 @@ public class UserController {
 		catch(Exception ex) {
 			if(ex.getLocalizedMessage().equals("username is required") || ex.getLocalizedMessage().equals("firstname is required")||
 					ex.getLocalizedMessage().equals("email is required") || ex.getLocalizedMessage().equals("password should be more then  7 char")) {
-				new ResponseEntity<>(ex.getMessage() ,HttpStatus.BAD_REQUEST);	
+				return new ResponseEntity<>(ex.getMessage() ,HttpStatus.BAD_REQUEST);	
 			} else if(ex.getLocalizedMessage().equals("User exist") || ex.getLocalizedMessage().equals("Different User with same email is exist")) {
-				new ResponseEntity<>(ex.getMessage() ,HttpStatus.CONFLICT);
+				return new ResponseEntity<>(ex.getMessage() ,HttpStatus.CONFLICT);
 			} else {
-				new ResponseEntity<>(ex.getMessage() ,HttpStatus.INTERNAL_SERVER_ERROR);
+				return new ResponseEntity<>(ex.getMessage() ,HttpStatus.INTERNAL_SERVER_ERROR);
 			}
 		}
 		return new ResponseEntity<>(result,HttpStatus.CREATED);
@@ -42,16 +42,16 @@ public class UserController {
 	}
 
 	@PostMapping("/login")
-	public ResponseEntity<UserLoginResponse> login(@RequestBody UserLoginDto user ) throws Exception{
+	public ResponseEntity<Object> login(@RequestBody UserLoginDto user ) throws Exception{
 		
 		UserLoginResponse resp = null;
 		try {
 			resp = userServices.loginUser(user.getUsername(), user.getPassword());
 		} catch(Exception ex) {
 			if(ex.getLocalizedMessage().equals("invalid password") || ex.getLocalizedMessage().equals("invalid user")) {
-				return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+				return new ResponseEntity<>(ex.getMessage() ,HttpStatus.UNAUTHORIZED);
 			} else {
-				return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+				return new ResponseEntity<>(ex.getMessage() ,HttpStatus.INTERNAL_SERVER_ERROR);
 			}
 		}
 
@@ -60,12 +60,12 @@ public class UserController {
 	}
 	
 	@GetMapping("/logout")
-	public  ResponseEntity<Boolean> logout(@RequestHeader("auth") String auth ){
+	public  ResponseEntity<Object> logout(@RequestHeader("auth") String auth ){
 		Boolean result = null;
 		try {
 		result=  userServices.logout(auth);
 		} catch(Exception ex ) {
-			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+			return new ResponseEntity<>(ex.getMessage() ,HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 		 return new ResponseEntity<>(result,HttpStatus.OK) ;
 

@@ -49,10 +49,10 @@ public class UserControllerTest {
 		HttpPost httpPost = new HttpPost(url);
 		RegisterUser user = new RegisterUser();
 		user.setContactNo("1234567890");
-		user.setUsername("itest1");
+		user.setUsername("itest21");
 		user.setFirstname("Tests");
 		user.setPassword("123456789");
-		user.setEmail("ac@gmail.com");
+		user.setEmail("accc@gmail.com");
 		user.setRole("Admin");
 		httpPost.setHeader(HttpHeaders.CONTENT_TYPE, "application/json");
 		//httpPost.addHeader("x-auth-token", API_KEY);

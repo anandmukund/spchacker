@@ -28,15 +28,15 @@ public class CovidController {
 	CovidService covidService;
 
 	@PostMapping("/covid")
-	public ResponseEntity<Iterable<Patients>> save(@RequestBody List<Patients> allPatients ) throws Exception{
+	public ResponseEntity<Object> save(@RequestBody List<Patients> allPatients ) throws Exception{
 		Iterable<Patients> result  = null;
 		try {
 			result = covidService.savePatents(allPatients);
 		}catch(Exception ex) {
 			if(ex.getMessage().equals("Invalid Request -- either invalid auth or user is logout")) {
-				return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+                 return new ResponseEntity<>(ex.getMessage() ,HttpStatus.UNAUTHORIZED);
 			} else {
-				return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+				return new ResponseEntity<>(ex.getMessage() ,HttpStatus.INTERNAL_SERVER_ERROR);
 			}
 		}
 		return new ResponseEntity<>(result,HttpStatus.OK); 
@@ -44,30 +44,30 @@ public class CovidController {
 	}
 
 	@GetMapping("/covid")
-	public ResponseEntity<Map<String ,List<Patients>>> getAllStateData(@RequestHeader("auth") String auth) throws Exception{
+	public ResponseEntity<Object> getAllStateData(@RequestHeader("auth") String auth) throws Exception{
 		Map<String ,List<Patients>> result = null;
 		try {
 			result = covidService.getAllStateData(auth);
 		}catch(Exception ex) {
 			if(ex.getMessage().equals("Invalid Request -- either invalid auth or user is logout")) {
-				return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+				return new ResponseEntity<>(ex.getMessage() ,HttpStatus.UNAUTHORIZED);
 			} else {
-				return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+				return new ResponseEntity<>(ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
 			}
 		}
 		return new ResponseEntity<>(result,HttpStatus.OK);
 	}
 
 	@GetMapping("/covidsingle")
-	public ResponseEntity<List<Patients>> getStateData(@PathParam("state")String state , @RequestHeader("auth") String auth) throws Exception{
+	public ResponseEntity<Object> getStateData(@PathParam("state")String state , @RequestHeader("auth") String auth) throws Exception{
 		List<Patients> result = null;
 		try {
 			result = covidService.getSingleStateData(state, auth);
 		} catch(Exception ex) {
 			if(ex.getMessage().equals("Invalid Request -- either invalid auth or user is logout")) {
-				return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+				return new ResponseEntity<>(ex.getMessage(),HttpStatus.UNAUTHORIZED);
 			} else {
-				return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+				return new ResponseEntity<>(ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
 			}
 		}
 		return new ResponseEntity<>(result,HttpStatus.OK); 
@@ -75,7 +75,7 @@ public class CovidController {
 	}
 
 	@GetMapping("/date")
-	public ResponseEntity<List<Patients>> geteDataByDateCondition(@RequestParam(name="state",required=false)String state , @RequestHeader("auth") String auth, @RequestParam(name="startDate",required=false)Date startDate,
+	public ResponseEntity<Object> geteDataByDateCondition(@RequestParam(name="state",required=false)String state , @RequestHeader("auth") String auth, @RequestParam(name="startDate",required=false)Date startDate,
 			@RequestParam(name="endDate",required=false)Date endDate , @RequestParam(name="status",defaultValue = "admit" , required = false)String status) throws Exception{
 
 		List<Patients> result = null;
@@ -96,9 +96,9 @@ public class CovidController {
 			} 
 		} catch(Exception ex) {
 			if(ex.getMessage().equals("Invalid Request -- either invalid auth or user is logout")) {
-				return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+				return new ResponseEntity<>(ex.getMessage(), HttpStatus.UNAUTHORIZED);
 			} else {
-				return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+				return new ResponseEntity<>(ex.getMessage() , HttpStatus.INTERNAL_SERVER_ERROR);
 			}
 		}
 
@@ -107,7 +107,7 @@ public class CovidController {
 	}
 
 	@GetMapping("/gender")
-	public ResponseEntity<List<Patients>> geteDataByGender(@RequestParam(name="state",required=false)String state , @RequestHeader("auth") String auth,@RequestParam(name="gender",required=true)char gender ) throws Exception{
+	public ResponseEntity<Object> geteDataByGender(@RequestParam(name="state",required=false)String state , @RequestHeader("auth") String auth,@RequestParam(name="gender",required=true)char gender ) throws Exception{
 
 		List<Patients> result = null;
 		try {
@@ -118,9 +118,9 @@ public class CovidController {
 			}
 		} catch(Exception ex) {
 			if(ex.getMessage().equals("Invalid Request -- either invalid auth or user is logout")) {
-				return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+				return new ResponseEntity<>(ex.getMessage() , HttpStatus.UNAUTHORIZED);
 			} else {
-				return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+				return new ResponseEntity<>(ex.getMessage() , HttpStatus.INTERNAL_SERVER_ERROR);
 			}
 		}
 		return new ResponseEntity<>(result,HttpStatus.OK); 
