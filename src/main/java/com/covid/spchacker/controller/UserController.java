@@ -1,5 +1,7 @@
 package com.covid.spchacker.controller;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,16 +20,25 @@ import com.covid.spchacker.service.UserServices;
 @RequestMapping("/user")
 public class UserController {
 
+	private static final Logger logger = LoggerFactory.getLogger(UserController.class);
+
 	@Autowired
 	UserServices userServices;
 
 	@PostMapping("/signup")
 	public ResponseEntity<Object> signup(@RequestBody RegisterUser user ) throws Exception{
 		Boolean result = null;
+		
+		logger.info("Request recived for user signup with username {}" , user.getUsername());
 		try {
 			result =  userServices.signUpUser(user);
+			
+			logger.info("new user created with   with username {}" , user.getUsername());
+			
 		} 
 		catch(Exception ex) {
+			logger.error("Issue to create user with username  {} and the issue is {}" , user.getUsername() , ex.getMessage());
+			
 			if(ex.getLocalizedMessage().equals("username is required") || ex.getLocalizedMessage().equals("firstname is required")||
 					ex.getLocalizedMessage().equals("email is required") || ex.getLocalizedMessage().equals("password should be more then  7 char")) {
 				return new ResponseEntity<>(ex.getMessage() ,HttpStatus.BAD_REQUEST);	
@@ -43,11 +54,14 @@ public class UserController {
 
 	@PostMapping("/login")
 	public ResponseEntity<Object> login(@RequestBody UserLoginDto user ) throws Exception{
-		
+		logger.info("Request recived for user login with username {}" , user.getUsername());
 		UserLoginResponse resp = null;
 		try {
 			resp = userServices.loginUser(user.getUsername(), user.getPassword());
+			logger.info("user login compleated  with  username {}" , user.getUsername());
+			
 		} catch(Exception ex) {
+			logger.error("Issue to login  user with username  {} and the issue is {}" , user.getUsername() , ex.getMessage());
 			if(ex.getLocalizedMessage().equals("invalid password") || ex.getLocalizedMessage().equals("invalid user")) {
 				return new ResponseEntity<>(ex.getMessage() ,HttpStatus.UNAUTHORIZED);
 			} else {

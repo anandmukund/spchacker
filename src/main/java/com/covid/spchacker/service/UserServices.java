@@ -1,5 +1,7 @@
 package com.covid.spchacker.service;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.covid.spchacker.cache.copy.ApplicationCache;
@@ -12,6 +14,8 @@ import com.covid.spchacker.repository.UserRepository;
 @Service
 public class UserServices {
 
+	private static final Logger logger = LoggerFactory.getLogger(UserServices.class);
+	
 	@Autowired 
 	UserRepository userRepository;
 
@@ -33,8 +37,10 @@ public class UserServices {
 	}
 
 	public Boolean signUpUser(RegisterUser user) throws Exception {
+		logger.info("Request recived in Service class for user signup with username {}" , user.getUsername());
 		User saveuser = validateAndtransferRequest(user);
 	    userRepository.save(saveuser);
+	    logger.info("new user created in service class with   with username {}" , user.getUsername());
 		return true;
 	}
 

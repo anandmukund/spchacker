@@ -7,6 +7,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -19,6 +21,8 @@ import com.covid.spchacker.repository.UserRepository;
 @Service
 public class CovidService {
 
+	private static final Logger logger = LoggerFactory.getLogger(CovidService.class);
+
 	@Autowired 
 	UserRepository userRepository;
 
@@ -26,13 +30,14 @@ public class CovidService {
 	PatientsRepository patientsRepository;
 
 	public List<Patients> getSingleStateData(String statename,String auth) throws Exception{
-
+		logger.info("Request recived for user getting covid data for state {}" , statename);
 		checkLoginUser(auth);
 
 		return patientsRepository.getAllPatientsByState(statename);
 	}
 
 	public Map<String ,List<Patients>> getAllStateData(String auth) throws Exception{
+		logger.info("Request recived for user getting covid data for state {}" , "all srartes");
 		checkLoginUser(auth);
 		Map<String ,List<Patients>> result = new HashMap<String, List<Patients>>();
 		Iterable<Patients> pt =  patientsRepository.findAll();
@@ -53,16 +58,20 @@ public class CovidService {
 	}
 
 	public Iterable<Patients> savePatents(List<Patients> allPatients){
+		logger.info("Request recived for user to save/update covid data  with size {}" , allPatients.size());
 		Iterable<Patients> iterable = allPatients;
 		return patientsRepository.saveAll(iterable);
 	}
 
 	public List<Patients> getStateDataByGender(String state,String auth,char gender) throws Exception{
+		logger.info("Request recived for user to Get covid data  for state size {} with gender " , state , gender);
 		checkLoginUser(auth);
 		return patientsRepository.getAllPatientsByGenderAndState(gender, state);
 	}
 
 	public List<Patients> getDataByGender(String auth,char gender) throws Exception{
+		logger.info("Request recived for user to Get covid data  for state size {} with gender " , "all state" , gender);
+		
 		checkLoginUser(auth);
 		return patientsRepository.getAllPatientsByGender(gender);
 	}
