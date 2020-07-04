@@ -74,7 +74,12 @@ public class UserServices {
 	}
 
 	public boolean logout(String userName) {
+		if(ApplicationCache.INSTANCE.userAuth.containsKey(userName)) {
 		ApplicationCache.INSTANCE.userAuth.remove(userName);
+		}  else {
+			
+			return false;
+		}
 		return true;
 	}
 	

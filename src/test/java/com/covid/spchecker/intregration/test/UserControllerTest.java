@@ -39,7 +39,7 @@ public class UserControllerTest {
 	public void createInput() throws IOException {
 		client = HttpClients.createDefault();
 	}
-	@Ignore
+	
 	@Test
 	public void testIntregrationForSignupAndLogin() throws Exception {
 
@@ -49,10 +49,10 @@ public class UserControllerTest {
 		HttpPost httpPost = new HttpPost(url);
 		RegisterUser user = new RegisterUser();
 		user.setContactNo("1234567890");
-		user.setUsername("itest");
+		user.setUsername("itest1");
 		user.setFirstname("Tests");
 		user.setPassword("123456789");
-		user.setEmail("a@gmail.com");
+		user.setEmail("ac@gmail.com");
 		user.setRole("Admin");
 		httpPost.setHeader(HttpHeaders.CONTENT_TYPE, "application/json");
 		//httpPost.addHeader("x-auth-token", API_KEY);
@@ -62,7 +62,7 @@ public class UserControllerTest {
 		CloseableHttpResponse response = client.execute(httpPost);
 
 
-		if (response.getStatusLine().getStatusCode() == 200) { 
+		if (response.getStatusLine().getStatusCode() == 201) { 
 			String responseBody = EntityUtils.toString(response.getEntity());
 			boolean result  = gson.fromJson(responseBody, Boolean.class);
 			assertTrue(result);

@@ -1,6 +1,8 @@
 package com.covid.spchacker.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -20,21 +22,52 @@ public class UserController {
 	UserServices userServices;
 
 	@PostMapping("/signup")
-	public boolean signup(@RequestBody RegisterUser user ) throws Exception{
-		 return userServices.signUpUser(user);
+	public ResponseEntity<Boolean> signup(@RequestBody RegisterUser user ) throws Exception{
+		Boolean result = null;
+		try {
+			result =  userServices.signUpUser(user);
+		} 
+		catch(Exception ex) {
+			if(ex.getLocalizedMessage().equals("username is required") || ex.getLocalizedMessage().equals("firstname is required")||
+					ex.getLocalizedMessage().equals("email is required") || ex.getLocalizedMessage().equals("password should be more then  7 char")) {
+				new ResponseEntity<>(ex.getMessage() ,HttpStatus.BAD_REQUEST);	
+			} else if(ex.getLocalizedMessage().equals("User exist") || ex.getLocalizedMessage().equals("Different User with same email is exist")) {
+				new ResponseEntity<>(ex.getMessage() ,HttpStatus.CONFLICT);
+			} else {
+				new ResponseEntity<>(ex.getMessage() ,HttpStatus.INTERNAL_SERVER_ERROR);
+			}
+		}
+		return new ResponseEntity<>(result,HttpStatus.CREATED);
 
 	}
 
 	@PostMapping("/login")
-	public UserLoginResponse login(@RequestBody UserLoginDto user ) throws Exception{
-		UserLoginResponse resp = userServices.loginUser(user.getUsername(), user.getPassword());
-		 return resp;
+	public ResponseEntity<UserLoginResponse> login(@RequestBody UserLoginDto user ) throws Exception{
+		
+		UserLoginResponse resp = null;
+		try {
+			resp = userServices.loginUser(user.getUsername(), user.getPassword());
+		} catch(Exception ex) {
+			if(ex.getLocalizedMessage().equals("invalid password") || ex.getLocalizedMessage().equals("invalid user")) {
+				return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+			} else {
+				return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+			}
+		}
+
+		return new ResponseEntity<>(resp,HttpStatus.OK);
 
 	}
 	
 	@GetMapping("/logout")
-	public boolean logout(@RequestHeader("auth") String auth ) throws Exception{
-		 return userServices.logout(auth);
+	public  ResponseEntity<Boolean> logout(@RequestHeader("auth") String auth ){
+		Boolean result = null;
+		try {
+		result=  userServices.logout(auth);
+		} catch(Exception ex ) {
+			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+		 return new ResponseEntity<>(result,HttpStatus.OK) ;
 
 	}
 }
